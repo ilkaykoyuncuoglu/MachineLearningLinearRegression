@@ -1,0 +1,117 @@
+---
+title: "Linear Regression with Hitters Data"
+author: "İlkay Koyuncuoğlu"
+date: "10/13/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+### Firstly, we load 'ISLR' package for Hitters data. And required packages must load.
+
+```{r message=FALSE, warning=FALSE}
+library(DataExplorer) #for visulation NA
+library(ISLR) # for hitters data
+```
+
+### Transfer to 'Hitters' data to R enviroment.
+
+```{r}
+hitters <- Hitters
+```
+
+### We will see if there is any 'NA'. Then, visulation to 'NA' data.
+### As can be seen in graphic, 59 observations are missing in the 'salary' variable.
+
+```{r fig.height= 4, fig.width=6}
+sum(is.na(hitters))
+plot_missing(hitters)
+```
+
+### Missing data can be filled in with mean, median, or mode values. The only disadvantage is that the variable can be said to decrease the variance value. But it is the most preferred method.
+
+```{r}
+hitters[is.na(hitters)]  <- mean(na.omit(hitters$Salary))
+sum(is.na(hitters))
+```
+
+### We'r gonna build us first model for comparison to other models.
+ $H_{1}:\beta_{CATBAT}$=$\beta_{CRuns}$=$\beta_{Wlaks}$=$\beta_{Years}$=$\beta_{devisionW}$=$\beta_{CRBI}$=$\beta_{Walks}$=$\beta_{NewLeaugeW}$=$\beta_{Putouts}$=0 
+ $H_{0}:$ En az bir  $\beta_j$!=0
+
+ $H_{0}$ is reject. The model is significant since f < 0.05. 
+
+ $H_{0}:\beta_{j}=0$
+ $H_{1}:\beta_{j}!=0$    j= CRuns, Walks, Years, Division, CRBI, CWalks, NewLeague, CAtBat, PutOuts
+ 
+### With 95% confidence, the variables of CRUNS, Walks, Division, CRBI, CWALKS and PUTOUTS were significant. The explanatoryity of the model is 0.4096.
+ 
+```{r}
+data=hitters[,-c(1,2,3,4,5,9,10,14,17,18)]
+model <- lm(Salary~CRuns+Walks+Years+Division+CRBI+CWalks+NewLeague+CAtBat+PutOuts,data = data)
+summary(model)
+```
+
+### 'set seed' function provides derivation of same random numbers.
+ smp_size variable is 70% of the data set. We took samples from the smp_size as much as sample size and transfered to 'train_ind'.
+### We transfered as much as 'train_ind' to 'train' in the data. 'test' is what remains from the data set.
+### Dimensions calculate with 'dim' function.
+ 
+```{r}
+set.seed(123)
+smp_size <- round(0.70 * nrow(data))
+train_ind <- sample(nrow(data), size = smp_size, replace = FALSE)
+train <- data[train_ind, ]
+test <- data[-train_ind, ]
+
+dim(train)
+dim(test)
+```
+
+### The Matrix Chart is used to evaluate the relationships between several pairs of variables at the same time. A matrix chart is a scatter chart series.
+ 
+###  There is linear relationship between 'years, cArBat, CRuns, CRBI and CWalks' variables.
+###  Desired situation, be relation between independent variables and dependent variable, but independent variables should not be related to each other. 
+###  The relationship between independent variables creates a multiple linear connection problem.
+###  There is multiple linear connection problem. We'll solve.
+
+```{r}
+pairs(train[,1:10], pch = 19, col='red', lower.panel = NULL)
+```
+
+ 
+### 'corrplot' check relationship between variables as in matrix plot and as image, and 'rcorr' check relationship between variables as numbers.
+
+### As we said above, there is linear relationship between 'years, cArBat, CRuns, CRBI and CWalks' variables. We see in the image.
+
+```{r message=FALSE, warning=FALSE}
+library("Hmisc")
+data1 <- train[,-c(7,10)]
+cor.data1=rcorr(as.matrix(data1))
+cor.data1$r
+
+library(corrplot)
+corrplot.mixed(cor(data1))
+```
+
+### The model is created with the data obtained from the 'training' data set.
+ 
+ $H_{1}:\beta_{CATBAT}$=$\beta_{CRuns}$=$\beta_{Wlaks}$=$\beta_{Years}$=$\beta_{devisionW}$=$\beta_{CRBI}$=$\beta_{Walks}$=$\beta_{NewLeaugeW}$=$\beta_{Putouts}$=0 
+ $H_{0}:$ En az bir  $\beta_j$!=0
+ 
+
+ $H_{1}:\beta_{j}$ =0 
+ $H_{1}:\beta_{j}$ !=0         j=CRuns,Walks,Division,CRBI,CWalks,NewLeague,CAtBat,PutOuts
+
+### years variable's significance value is 0.819 and  NewLeagueN variable's significance value is 0.787. 
+### Other varibales are significant with 95% confidence. Because, p-value's < 0.05.
+### The explanatoryity of the model is 0.4968.
+
+```{r}
+mfulltrain=lm(Salary~CRuns+Years+Walks+Division+CRBI+CWalks+NewLeague+CAtBat+PutOuts, data=train)
+summary(mfulltrain)
+```
+
+ 
+
+

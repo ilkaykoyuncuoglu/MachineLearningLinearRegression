@@ -3,8 +3,8 @@ title: "Linear Regression with Hitters Data"
 author: "İlkay Koyuncuoğlu"
 date: "10/13/2020"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ### Firstly, we load 'ISLR' package for Hitters data. And required packages must load.

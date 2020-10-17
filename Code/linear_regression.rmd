@@ -3,8 +3,8 @@ title: "Linear Regression with Hitters Data"
 author: "İlkay Koyuncuoğlu"
 date: "10/13/2020"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ### Firstly, we load 'ISLR' package for Hitters data. And required packages must load.
@@ -28,7 +28,7 @@ hitters <- Hitters
 ### We will see if there is any 'NA'. Then, visulation to 'NA' data.
 ### As can be seen in graphic, 59 observations are missing in the 'salary' variable.
 
-```{r fig.height= 4, fig.width=6, results=TRUE}
+```{r fig.height= 3, fig.width=6, results=TRUE}
 sum(is.na(hitters))
 plot_missing(hitters)
 ```

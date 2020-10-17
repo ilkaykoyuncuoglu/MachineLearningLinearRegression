@@ -7,7 +7,7 @@ output:
   html_document: default
 ---
 
-### Firstly, we load 'ISLR' package for Hitters data. And required packages must load.
+ Firstly, we load 'ISLR' package for Hitters data. And required packages must load.
 
 ```{r message=FALSE, warning=FALSE, results=TRUE}
 library(DataExplorer) #for visulation NA
@@ -19,37 +19,41 @@ library("dplyr")
 library("Hmisc")
 ```
 
-### Transfer to 'Hitters' data to R enviroment.
+ Transfer to 'Hitters' data to R enviroment.
 
 ```{r results=TRUE}
 hitters <- Hitters
 ```
 
-### We will see if there is any 'NA'. Then, visulation to 'NA' data.
-### As can be seen in graphic, 59 observations are missing in the 'salary' variable.
+ We will see if there is any 'NA'. Then, visulation to 'NA' data.
+
+ As can be seen in graphic, 59 observations are missing in the 'salary' variable.
 
 ```{r fig.height= 3, fig.width=6, results=TRUE}
 sum(is.na(hitters))
 plot_missing(hitters)
 ```
 
-### Missing data can be filled in with mean, median, or mode values. The only disadvantage is that the variable can be said to decrease the variance value. But it is the most preferred method.
+ Missing data can be filled in with mean, median, or mode values. The only disadvantage is that the variable can be said to decrease the variance value. But it is the most preferred method.
 
 ```{r results=TRUE}
 hitters[is.na(hitters)]  <- mean(na.omit(hitters$Salary))
 sum(is.na(hitters))
 ```
 
-### We'r gonna build us first model for comparison to other models.
+ We'r gonna build us first model for comparison to other models.
+
  $H_{1}:\beta_{CATBAT}$=$\beta_{CRuns}$=$\beta_{Wlaks}$=$\beta_{Years}$=$\beta_{devisionW}$=$\beta_{CRBI}$=$\beta_{Walks}$=$\beta_{NewLeaugeW}$=$\beta_{Putouts}$=0 
+ 
  $H_{0}:$ En az bir  $\beta_j$!=0
 
  $H_{0}$ is reject. The model is significant since f < 0.05. 
 
  $H_{0}:\beta_{j}=0$
+ 
  $H_{1}:\beta_{j}!=0$    j= CRuns, Walks, Years, Division, CRBI, CWalks, NewLeague, CAtBat, PutOuts
  
-### With 95% confidence, the variables of CRUNS, Walks, Division, CRBI, CWALKS and PUTOUTS were significant. The explanatoryity of the model is 0.4096.
+ With 95% confidence, the variables of CRUNS, Walks, Division, CRBI, CWALKS and PUTOUTS were significant. The explanatoryity of the model is 0.4096.
  
 ```{r results=TRUE}
 data=hitters[,-c(1,2,3,4,5,9,10,14,17,18)]
@@ -57,10 +61,13 @@ model <- lm(Salary~CRuns+Walks+Years+Division+CRBI+CWalks+NewLeague+CAtBat+PutOu
 summary(model)
 ```
 
-### 'set seed' function provides derivation of same random numbers.
+ 'set seed' function provides derivation of same random numbers.
+
  smp_size variable is 70% of the data set. We took samples from the smp_size as much as sample size and transfered to 'train_ind'.
-### We transfered as much as 'train_ind' to 'train' in the data. 'test' is what remains from the data set.
-### Dimensions calculate with 'dim' function.
+ 
+ We transfered as much as 'train_ind' to 'train' in the data. 'test' is what remains from the data set.
+
+ Dimensions calculate with 'dim' function.
  
 ```{r results=TRUE}
 set.seed(123)
@@ -73,21 +80,21 @@ dim(train)
 dim(test)
 ```
 
-### The Matrix Chart is used to evaluate the relationships between several pairs of variables at the same time. A matrix chart is a scatter chart series.
+ The Matrix Chart is used to evaluate the relationships between several pairs of variables at the same time. A matrix chart is a scatter chart series.
  
-###  There is linear relationship between 'years, cArBat, CRuns, CRBI and CWalks' variables.
-###  Desired situation, be relation between independent variables and dependent variable, but independent variables should not be related to each other. 
-###  The relationship between independent variables creates a multiple linear connection problem.
-###  There is multiple linear connection problem. We'll solve.
+  There is linear relationship between 'years, cArBat, CRuns, CRBI and CWalks' variables.
+  Desired situation, be relation between independent variables and dependent variable, but independent variables should not be related to each other. 
+  The relationship between independent variables creates a multiple linear connection problem.
+  There is multiple linear connection problem. We'll solve.
 
 ```{r results=TRUE}
 pairs(train[,1:10], pch = 19, col='red', lower.panel = NULL)
 ```
 
  
-### 'corrplot' check relationship between variables as in matrix plot and as image, and 'rcorr' check relationship between variables as numbers.
+ 'corrplot' check relationship between variables as in matrix plot and as image, and 'rcorr' check relationship between variables as numbers.
 
-### As we said above, there is linear relationship between 'years, cArBat, CRuns, CRBI and CWalks' variables. We see in the image.
+ As we said above, there is linear relationship between 'years, cArBat, CRuns, CRBI and CWalks' variables. We see in the image.
 
 ```{r message=FALSE, warning=FALSE, results=TRUE}
 library("Hmisc")
@@ -99,25 +106,26 @@ library(corrplot)
 corrplot.mixed(cor(data1))
 ```
 
-### The model is created with the data obtained from the 'training' data set.
+ The model is created with the data obtained from the 'training' data set.
  
  $H_{1}:\beta_{CATBAT}$=$\beta_{CRuns}$=$\beta_{Wlaks}$=$\beta_{Years}$=$\beta_{devisionW}$=$\beta_{CRBI}$=$\beta_{Walks}$=$\beta_{NewLeaugeW}$=$\beta_{Putouts}$=0 
+ 
  $H_{0}:$ En az bir  $\beta_j$!=0
  
-
  $H_{1}:\beta_{j}$ =0 
+ 
  $H_{1}:\beta_{j}$ !=0         j=CRuns,Walks,Division,CRBI,CWalks,NewLeague,CAtBat,PutOuts
 
-### years variable's significance value is 0.819 and  NewLeagueN variable's significance value is 0.787. 
-### Other varibales are significant with 95% confidence. Because, p-value's < 0.05.
-### The explanatoryity of the model is 0.4968.
+ years variable's significance value is 0.819 and  NewLeagueN variable's significance value is 0.787. 
+ Other varibales are significant with 95% confidence. Because, p-value's < 0.05.
+ The explanatoryity of the model is 0.4968.
 
 ```{r results=TRUE}
 mfulltrain=lm(Salary~CRuns+Years+Walks+Division+CRBI+CWalks+NewLeague+CAtBat+PutOuts, data=train)
 summary(mfulltrain)
 ```
 
-### To determine the variables that create a multiple linear connection problem, vif values are checked. CRuns, Years, CRBI, CWalks and CAtBat is the variables that create a multiple linear connection problem.
+ To determine the variables that create a multiple linear connection problem, vif values are checked. CRuns, Years, CRBI, CWalks and CAtBat is the variables that create a multiple linear connection problem.
 
 
 ```{r results=TRUE}
@@ -125,12 +133,15 @@ library(car)
 vif(mfulltrain)
 ```
  
-### Not all of these variables are removed from the model. Variables which have multiple linear connection problem between them are combined to get the best model. For this, the 'ols_step_all_possible' function is used. '466., 502. and 503.' models are the best it has the value of $R^2$ and cp.
+ Not all of these variables are removed from the model. Variables which have multiple linear connection problem between them are combined to get the best model. 
+
+ For this, the 'ols_step_all_possible' function is used. '466., 502. ' models are the best it has the value of $R^2$ and cp.
 
  466. model inclued CRuns, Walks, Division, CRBI, CWalks, CAtBat and PutOuts variables. 'cp' value is 6.1399.  $R^2$ value is 0.4964.
+ 
  502. model inclued CRuns, Walks, Division, CRBI, CWalks,NewLeauge, CAtBat and PutOuts variables.  'cp' value is 8.05. $R^2$ value is 0.4966.
  
-### The purpose is to obtain the most explanatory information with less variables.
+ The purpose is to obtain the most explanatory information with less variables.
 
 ```{r results=TRUE}
 k=ols_step_all_possible(mfulltrain)
@@ -139,8 +150,9 @@ k$predictors[466]
 k$predictors[502]
 ```
 
-###  These models are created with determinated variables. 
-### Press values of the models are very close to each other. However, the model with the most explanations is the 466th model. The choose model is 466th model.
+  These models are created with determinated variables. 
+
+ Press values of the models are very close to each other. However, the model with the most explanations is the 466th model. The choose model is 466th model.
 
 ```{r results=TRUE}
 m_502_press <-lm(Salary~Walks+Division+CRBI+PutOuts+CRuns+CWalks+NewLeague+CAtBat, data=train) 
@@ -155,20 +167,21 @@ PRESS2 # 352.6942
 
 ## ASSUMPTION
 
-### Assumption 1: Linear relationship between Independent and dependent variables
+ Assumption 1: Linear relationship between Independent and dependent variables
 
 $H_0$: There is Linear relationship between Independent and dependent variables.
+
 $H_1$: There is no Linear relationship between Independent and dependent variables.
 
 p-value = 0.01338 < 0.05. 
 
-### The fact that the residues are not suitable for normal distribution affects the analysis. However, it is difficult to obtain data that will fit the normal distribution. So when the p-value is very close to 0.05, it can be assumed to be normal.
+ The fact that the residues are not suitable for normal distribution affects the analysis. However, it is difficult to obtain data that will fit the normal distribution. So when the p-value is very close to 0.05, it can be assumed to be normal.
 
 ```{r results=TRUE}
 shapiro.test(m_502_press$residuals)
 ```
 
-### Assumption 2: Number of observations should be greater than number of independent variables. This is multiple linear connection problem.
+ Assumption 2: Number of observations should be greater than number of independent variables. This is multiple linear connection problem.
 
 ```{r results=TRUE}
 vif(m_502_press)
